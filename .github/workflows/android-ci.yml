@@ -17,7 +17,7 @@ jobs:
           distribution: 'temurin'
       
       - name: Decode keystore
-        run: echo ${{ secrets.KEYSTORE_BASE64 }} | base64 -d > my-release-key.jks
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > my-release-key.jks
       
       - name: Create keystore.properties
         run: |
@@ -25,9 +25,13 @@ jobs:
           echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> keystore.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> keystore.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> keystore.properties
+          cat keystore.properties  # Pour debug
       
-      - name: Move keystore.properties to android folder
-        run: mv keystore.properties android/
+      - name: Move files to android folder
+        run: |
+          mv my-release-key.jks android/
+          mv keystore.properties android/
+          ls -la android/  # Pour debug
       
       - name: Build signed APK
         run: |
