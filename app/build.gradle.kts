@@ -8,9 +8,7 @@ plugins {
 
 android {
     namespace = "com.example.myapplication"
-    compileSdk {
-        version = 36
-    }
+    compileSdk = 36  // 👈 CHANGE ICI
 
     defaultConfig {
         applicationId = "com.example.myapplication"
@@ -22,7 +20,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    
+    // Signature config
     signingConfigs {
         create("release") {
             val keystoreFile = rootProject.file("keystore.properties")
@@ -40,7 +38,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("release") 
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
