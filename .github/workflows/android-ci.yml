@@ -25,13 +25,7 @@ jobs:
           echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> keystore.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> keystore.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> keystore.properties
-          cat keystore.properties  # Pour debug
-      
-      - name: Move files to android folder
-        run: |
-          mv my-release-key.jks android/
-          mv keystore.properties android/
-          ls -la android/  # Pour debug
+          cat keystore.properties
       
       - name: Build signed APK
         run: |
