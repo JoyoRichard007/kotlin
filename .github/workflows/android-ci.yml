@@ -9,17 +9,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build APK
+      
+      - name: Decode keystore
+        run: echo ${{ secrets.KEYSTORE_BASE64 }} | base64 -d > my-release-key.jks
+      
+      - name: Create keystore.properties
+        run: |
+          echo "storeFile=../my-release-key.jks" > keystore.properties
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> keystore.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> keystore.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> keystore.properties
+      
+      - name: Move keystore.properties to android folder
+        run: mv keystore.properties android/
+      
+      - name: Build signed APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleRelease
+      
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
-          path: app/build/outputs/apk/debug/*.apk 
+          name: app-release-signed
+          path: app/build/outputs/apk/release/*.apk
